@@ -20,29 +20,37 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} # integration with OIDC recommended
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # integration with OIDC recommended
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Check if Lambda function exists
         run: |
           set +e
           aws lambda get-function --function-name python-lambda1
-          echo "exists=$?" >> $GITHUB_ENV
+          echo "existslambda=$?" >> $GITHUB_ENV
 
-      # - name: Create Lambda base function 
-      #   run: |
-      #     aws lambda create-function \
-      #       --function-name python-lambda1 \
-      #       --runtime python3.9 \
-      #       --zip-file fileb://base.zip \
-      #       --handler lambda_function.handler \
-      #       --role arn:aws:iam::332093714913:role/lambda-canary-execution-role
+      - name: Create Lambda base function
+        if: env.existslambda == '1'  # Runs only if get-function failed (function does NOT exist)
+        run: |
+          aws lambda create-function \
+            --function-name python-lambda1 \
+            --runtime python3.9 \
+            --zip-file fileb://base.zip \
+            --handler lambda_function.handler \
+            --role arn:aws:iam::332093714913:role/lambda-canary-execution-role
 
-      # - name: Create Lambda version v1 
-      #   run: |
-      #     aws lambda publish-version \
-      #       --function-name python-lambda1 --description "v1"
+      - name: Check if Lambda version1 exists
+        run: |
+          set +e
+          aws lambda get-function --function-name my-function --qualifier 1
+          echo "existslambdaversion=$?" >> $GITHUB_ENV
+
+      - name: Create Lambda version v1
+        if: env.existslambdaversion == '1'  # Runs only if get-function failed (function does NOT exist)
+        run: |
+          aws lambda publish-version \
+            --function-name python-lambda1 --description "v1"
 
 
 
