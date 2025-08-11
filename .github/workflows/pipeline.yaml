@@ -43,6 +43,8 @@ jobs:
       - name: Update Lambda base function to version1
         if: env.existslambda == '1'  # Runs only if get-function failed (function does NOT exist)
         run: |
+          set +e
+          echo "111111111"
           aws lambda update-function-code \
             --function-name python-lambda1 \
             --zip-file fileb://version1.zip
