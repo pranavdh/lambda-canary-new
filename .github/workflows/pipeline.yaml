@@ -24,7 +24,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       
-      - name: Zip Lambda - v1 code
+      - name: Create Lambda base function 
         run: |
           aws lambda create-function \
             --function-name python-lambda1 \
@@ -32,7 +32,17 @@ jobs:
             --zip-file fileb://base.zip \
             --handler lambda_function.handler \
             --role arn:aws:iam::332093714913:role/lambda-canary-execution-role
-          
+
+      - name: Create Lambda version v1 
+        run: |
+          aws lambda publish-version \
+            --function-name python-lambda1 --description "v1"
+
+
+
+
+
+
       # - name: Zip Lambda - v1 code
       #   run: |
       #     aws lambda update-function-code \
