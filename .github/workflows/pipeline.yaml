@@ -25,7 +25,6 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Create Lambda function
-          id: create_lambda
           run: |
             aws lambda create-function \
               --function-name python-lambda1 \
