@@ -43,7 +43,7 @@ jobs:
       - name: Check Lambda function state
         run: |
           STATE=$(aws lambda get-function \
-            --function-name $FUNCTION_NAME \
+            --function-name python-lambda1 \
             --query 'Configuration.State' \
             --output text)
           echo "Lambda state is: $STATE"
