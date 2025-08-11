@@ -68,10 +68,10 @@ jobs:
         run: |
           set +e
           aws lambda get-function --function-name python-lambda1 --qualifier 2
-          echo "existslambdaversion2=$?" >> $GITHUB_ENV
+          echo "existslambda=$?" >> $GITHUB_ENV
 
       - name: Create Lambda version v2
-        if: env.existslambdaversion2 == '1'  # Runs only if get-function failed (version1 does not exist)
+        if: env.existslambda == '254'  # Runs only if get-function failed (version1 does not exist)
         run: |
           aws lambda publish-version \
             --function-name python-lambda1 --description "v2"
