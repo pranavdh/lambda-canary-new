@@ -48,6 +48,7 @@ jobs:
           aws lambda update-function-code \
             --function-name python-lambda1 \
             --zip-file fileb://version1.zip
+            --role arn:aws:iam::332093714913:role/lambda-canary-execution-role
 
       # - name: Check if Lambda version1 exists
       #   run: |
