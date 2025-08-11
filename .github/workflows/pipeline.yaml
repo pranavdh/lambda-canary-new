@@ -49,7 +49,7 @@ jobs:
       - name: Check if Lambda version1 exists
         run: |
           set +e
-          aws lambda get-function --function-name my-function --qualifier 1
+          aws lambda get-function --function-name python-lambda1 --qualifier 1
           echo "existslambdaversion1=$?" >> $GITHUB_ENV
 
       - name: Create Lambda version v1
@@ -58,7 +58,7 @@ jobs:
           aws lambda publish-version \
             --function-name python-lambda1 --description "v1"
 
-      - name: Update Lambda base function to version2
+      - name: Update Lambda version1 function to version2
         run: |
           aws lambda update-function-code \
             --function-name python-lambda1 \
@@ -67,7 +67,7 @@ jobs:
       - name: Check if Lambda version2 exists
         run: |
           set +e
-          aws lambda get-function --function-name my-function --qualifier 2
+          aws lambda get-function --function-name python-lambda1 --qualifier 2
           echo "existslambdaversion2=$?" >> $GITHUB_ENV
 
       - name: Create Lambda version v2
