@@ -27,14 +27,14 @@ jobs:
       - name: Check if Lambda function exists
         run: |
           set +e
-          aws lambda get-function --function-name python-lambda1
+          aws lambda get-function --function-name python-lambda2
           echo "existslambda=$?" > $GITHUB_ENV
 
       - name: Create Lambda base function
         if: env.existslambda == '254'  # Runs only if get-function failed (function does NOT exist)
         run: |
           aws lambda create-function \
-            --function-name python-lambda1 \
+            --function-name python-lambda2 \
             --runtime python3.9 \
             --zip-file fileb://base.zip \
             --handler lambda_function.handler \
@@ -43,7 +43,7 @@ jobs:
       - name: Check Lambda function state
         run: |
           STATE=$(aws lambda get-function \
-            --function-name python-lambda1 \
+            --function-name python-lambda2 \
             --query 'Configuration.State' \
             --output text)
           echo "Lambda state is: $STATE"
@@ -56,7 +56,7 @@ jobs:
       - name: Update Lambda base function to version1
         run: |
           aws lambda update-function-code \
-            --function-name python-lambda1 \
+            --function-name python-lambda2 \
             --zip-file fileb://version1.zip
 
       - name: Check if Lambda version1 exists
@@ -69,25 +69,25 @@ jobs:
         if: env.existslambda == '254'  # Runs only if get-function failed (version1 does not exist)
         run: |
           aws lambda publish-version \
-            --function-name python-lambda1 --description "v1"
+            --function-name python-lambda2 --description "v1"
 
       - name: Update Lambda version1 function to version2
         run: |
           aws lambda update-function-code \
-            --function-name python-lambda1 \
+            --function-name python-lambda2 \
             --zip-file fileb://version2.zip
 
       - name: Check if Lambda version2 exists
         run: |
           set +e
-          aws lambda get-function --function-name python-lambda1 --qualifier 2
+          aws lambda get-function --function-name python-lambda2 --qualifier 2
           echo "existslambda=$?" >> $GITHUB_ENV
 
       - name: Create Lambda version v2
         if: env.existslambda == '254'  # Runs only if get-function failed (version1 does not exist)
         run: |
           aws lambda publish-version \
-            --function-name python-lambda1 --description "v2"
+            --function-name python-lambda2 --description "v2"
 
       # - name: Zip Lambda - v1 code
       #   run: |
