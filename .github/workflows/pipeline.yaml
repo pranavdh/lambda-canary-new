@@ -24,11 +24,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # integration with OIDC recommended
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # - name: Check if Lambda function exists
-      #   run: |
-      #     set +e
-      #     aws lambda get-function --function-name python-lambda1
-      #     echo "existslambda=$?" >> $GITHUB_ENV
+      - name: Check if Lambda function exists
+        run: |
+          set +e
+          aws lambda get-function --function-name python-lambda1
+          echo "existslambda=$?" >> $GITHUB_ENV
 
       # - name: Create Lambda base function
       #   if: env.existslambda == '1'  # Runs only if get-function failed (function does NOT exist)
