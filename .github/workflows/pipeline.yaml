@@ -53,7 +53,7 @@ jobs:
           echo "existslambdaversion1=$?" >> $GITHUB_ENV
 
       - name: Create Lambda version v1
-        if: env.existslambdaversion1 == '0'  # Runs only if get-function succeeded (version1 exists)
+        if: env.existslambdaversion1 == '1'  # Runs only if get-function failed (version1 does not exist)
         run: |
           aws lambda publish-version \
             --function-name python-lambda1 --description "v1"
@@ -71,7 +71,7 @@ jobs:
           echo "existslambdaversion2=$?" >> $GITHUB_ENV
 
       - name: Create Lambda version v2
-        if: env.existslambdaversion2 == '0'  # Runs only if get-function succeeded (version2 exists)
+        if: env.existslambdaversion2 == '1'  # Runs only if get-function failed (version1 does not exist)
         run: |
           aws lambda publish-version \
             --function-name python-lambda1 --description "v2"
