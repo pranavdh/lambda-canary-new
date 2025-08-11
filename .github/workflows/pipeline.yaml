@@ -31,7 +31,7 @@ jobs:
           echo "existslambda=$?" >> $GITHUB_ENV
 
       - name: Create Lambda base function
-        if: env.existslambda == '1'  # Runs only if get-function failed (function does NOT exist)
+        if: env.existslambda == '254'  # Runs only if get-function failed (function does NOT exist)
         run: |
           aws lambda create-function \
             --function-name python-lambda1 \
