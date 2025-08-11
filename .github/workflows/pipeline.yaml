@@ -40,6 +40,19 @@ jobs:
             --handler lambda_function.handler \
             --role arn:aws:iam::332093714913:role/lambda-canary-execution-role
 
+      - name: Check Lambda function state
+        run: |
+          STATE=$(aws lambda get-function \
+            --function-name $FUNCTION_NAME \
+            --query 'Configuration.State' \
+            --output text)
+          echo "Lambda state is: $STATE"
+
+          if [ "$STATE" != "Active" ]; then
+            echo "Waiting for 30 seconds as Lambda is not active yet..."
+            sleep 30
+          fi
+
       - name: Update Lambda base function to version1
         run: |
           aws lambda update-function-code \
