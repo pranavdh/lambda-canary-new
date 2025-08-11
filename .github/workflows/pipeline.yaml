@@ -44,7 +44,7 @@ jobs:
         run: |
           aws lambda update-function-code \
             --function-name python-lambda1 \
-            --zip-file fileb://version1.zip
+            --zip-file fileb://version2.zip
 
 
       # - name: Check if Lambda version1 exists
