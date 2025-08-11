@@ -25,13 +25,13 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
       
       - name: Zip Lambda - v1 code
-          run: |
-            aws lambda create-function \
-                --function-name python-lambda1 \
-                --runtime python3.9 \
-                --zip-file fileb://base.zip \
-                --handler lambda_function.handler \
-                --role arn:aws:iam::123456789012:role/lambda-execution-rolearn:aws:iam::332093714913:role/lambda-canary-execution-role
+        run: |
+          aws lambda create-function \
+            --function-name python-lambda1 \
+            --runtime python3.9 \
+            --zip-file fileb://base.zip \
+            --handler lambda_function.handler \
+            --role arn:aws:iam::123456789012:role/lambda-execution-rolearn:aws:iam::332093714913:role/lambda-canary-execution-role
           
       # - name: Zip Lambda - v1 code
       #   run: |
