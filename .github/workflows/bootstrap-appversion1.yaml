@@ -39,4 +39,4 @@ jobs:
             --zip-file fileb://version1.zip \
             --handler lambda_function.handler \
             --role arn:aws:iam::332093714913:role/lambda-canary-execution-role
-#
+#test
