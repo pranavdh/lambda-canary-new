@@ -27,7 +27,7 @@ jobs:
       - name: Check if Lambda function exists
         run: |
           set +e
-          aws lambda get-function --function-name canary-version1
+          aws lambda get-function --function-name canary-appversion1
           echo "existslambda=$?" >> $GITHUB_ENV
 
       - name: Create Lambda base function

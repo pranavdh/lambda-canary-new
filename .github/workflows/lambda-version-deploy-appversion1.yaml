@@ -25,7 +25,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
 
-      - name: Wait for Lambda update to finish
+      - name: Wait for Lambda creation to finish
         run: |
             STATE=$(aws lambda get-function \
               --function-name canary-appversion1 \
@@ -41,46 +41,15 @@ jobs:
               break
             fi
 
+      - name: Check if Lambda function exists
+        run: |
+          set +e
+          aws lambda get-function --function-name canary-appversion1
+          echo "existslambda=$?" >> $GITHUB_ENV
+
       - name: Update Lambda versions for appversion1
+        if: env.existslambda == '0'  # Runs only if get-function exists
         run: |
           aws lambda update-function-code \
             --function-name canary-appversion1 \
             --zip-file fileb://version1.zip
-
-      # - name: Check if Lambda version1 exists
-      #   run: |
-      #     set +e
-      #     aws lambda get-function --function-name python-lambda1 --qualifier 1
-      #     echo "existslambda=$?" >> $GITHUB_ENV
-
-      - name: Create Lambda versions for appversion1
-#        if: env.existslambda == '254'  # Runs only if get-function failed (version1 does not exist)
-        run: |
-          aws lambda publish-version \
-            --function-name canary-appversion1 --description "version of appversion1"
-
-# test
-## old code
-      # - name: Update Lambda version1 function to version2
-      #   run: |
-      #     aws lambda update-function-code \
-      #       --function-name python-lambda2 \
-      #       --zip-file fileb://version2.zip
-
-      # - name: Check if Lambda version2 exists
-      #   run: |
-      #     set +e
-      #     aws lambda get-function --function-name python-lambda2 --qualifier 2
-      #     echo "existslambda=$?" >> $GITHUB_ENV
-
-      # - name: Create Lambda version v2
-      #   if: env.existslambda == '254'  # Runs only if get-function failed (version1 does not exist)
-      #   run: |
-      #     aws lambda publish-version \
-      #       --function-name python-lambda2 --description "v2"
-
-      # # - name: Zip Lambda - v1 code
-      # #   run: |
-      # #     aws lambda update-function-code \
-      # #       --function-name python-lambda \
-      # #       --zip-file fileb://version1.zip

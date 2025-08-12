@@ -24,9 +24,31 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # integration with OIDC recommended
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Wait for Lambda updation to finish
+        run: |
+            STATE=$(aws lambda get-function \
+              --function-name canary-appversion1 \
+              --query 'Configuration.State' \
+              --output text)
+            LASTUPDATE=$(aws lambda get-function \
+              --function-name canary-appversion1 \
+              --query 'Configuration.LastUpdateStatus' \
+              --output text)
+            echo "State: $STATE, LastUpdateStatus: $LASTUPDATE"
+            if [ "$STATE" = "Active" ] && [ "$LASTUPDATE" = "Successful" ]; then
+              sleep 30
+              break
+            fi
 
-      - name: Publish Version for appversion1
-#        if: env.existslambda == '254'  # Runs only if get-function failed (version1 does not exist)
+      - name: Check if Lambda function exists
+        run: |
+          set +e
+          aws lambda get-function --function-name canary-appversion1
+          echo "existslambda=$?" >> $GITHUB_ENV
+
+
+      - name: Publish for appversion1
+        if: env.existslambda == '0'  # Runs only if get-function exists
         run: |
           aws lambda publish-version \
             --function-name canary-appversion1 --description "version of appversion1"
