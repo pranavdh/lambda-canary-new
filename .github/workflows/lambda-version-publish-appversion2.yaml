@@ -51,4 +51,4 @@ jobs:
         if: env.existslambda == '0'  # Runs only if get-function exists
         run: |
           aws lambda publish-version \
-            --function-name canary-appversion1 --description "version of appversion2"
+            --function-name canary-appversion2 --description "version of appversion2"
