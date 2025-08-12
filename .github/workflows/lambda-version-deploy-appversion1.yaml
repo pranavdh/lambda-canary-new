@@ -42,7 +42,7 @@ jobs:
           aws lambda publish-version \
             --function-name canary-appversion1 --description "version of appversion1"
 
-
+# test
 ## old code
       # - name: Update Lambda version1 function to version2
       #   run: |
