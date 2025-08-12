@@ -28,7 +28,7 @@ jobs:
         run: |
           set +e
           aws lambda get-function --function-name canary-appversion2
-          echo "existslambda=$?" > $GITHUB_ENV
+          echo "existslambda=$?" >> $GITHUB_ENV
 
       - name: Create Lambda base function
         if: env.existslambda == '254'  # Runs only if get-function failed (function does NOT exist)
