@@ -24,6 +24,23 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # integration with OIDC recommended
           aws-region: ${{ secrets.AWS_REGION }}
 
+
+      - name: Wait for Lambda update to finish
+        run: |
+            STATE=$(aws lambda get-function \
+              --function-name canary-appversion1 \
+              --query 'Configuration.State' \
+              --output text)
+            LASTUPDATE=$(aws lambda get-function \
+              --function-name canary-appversion1 \
+              --query 'Configuration.LastUpdateStatus' \
+              --output text)
+            echo "State: $STATE, LastUpdateStatus: $LASTUPDATE"
+            if [ "$STATE" = "Active" ] && [ "$LASTUPDATE" = "Successful" ]; then
+              sleep 30
+              break
+            fi
+
       - name: Update Lambda versions for appversion1
         run: |
           aws lambda update-function-code \
