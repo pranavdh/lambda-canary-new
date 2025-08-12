@@ -28,6 +28,8 @@ jobs:
 
       - name: Lambda ALIAS_VERSION1
         run: |
+          LATEST_VERSION=$(aws lambda publish-version --function-name python-lambda2 --description "v1" --query Version --output text)
+          echo "Latest lamda version is: $LATEST_VERSION"
           aws lambda create-alias \
             --function-name python-lambda2 \
             --name ALIAS_VERSION1 \
