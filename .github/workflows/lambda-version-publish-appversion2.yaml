@@ -1,10 +1,10 @@
 # This is a basic workflow to help you get started with Actions
 
-name: lambda-version-deploy-appversion2
+name: lambda-version-publish-appversion2
 
 on:
   workflow_run:
-    workflows: ["canary-appversion2"]   # Name of the workflow in bootstrap.yml
+    workflows: ["lambda-version-deploy-appversion2"]   # Name of the workflow in bootstrap.yml
     branches:
       - main
     types:
@@ -24,8 +24,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # integration with OIDC recommended
           aws-region: ${{ secrets.AWS_REGION }}
 
-
-      - name: Wait for Lambda creation to finish
+      - name: Wait for Lambda updation to finish
         run: |
             STATE=$(aws lambda get-function \
               --function-name canary-appversion2 \
@@ -47,9 +46,9 @@ jobs:
           aws lambda get-function --function-name canary-appversion2
           echo "existslambda=$?" >> $GITHUB_ENV
 
-      - name: Update Lambda versions for appversion2
+
+      - name: Publish for appversion2
         if: env.existslambda == '0'  # Runs only if get-function exists
         run: |
-          aws lambda update-function-code \
-            --function-name canary-appversion2 \
-            --zip-file fileb://version2.zip
+          aws lambda publish-version \
+            --function-name canary-appversion1 --description "version of appversion2"
